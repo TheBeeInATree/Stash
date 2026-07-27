@@ -112,7 +112,21 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
           <div style={{ flex: 1 }} />
 
           {/* User Profile / Settings */}
-          <Link to="/app/settings" className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer hover:bg-indigo-600 transition-colors">
+          <Link to="/app/settings" style={{
+            width: '40px',
+            minHeight: '40px',
+            borderRadius: '50%',
+            background: 'var(--accent-primary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 'bold',
+            textDecoration: 'none',
+            alignSelf: 'center',
+            boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
+            marginTop: '1rem'
+          }}>
             {userId.substring(0, 2).toUpperCase()}
           </Link>
         </nav>
