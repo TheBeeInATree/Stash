@@ -29,34 +29,15 @@ interface AppShellProps {
 }
 
 export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, userId }: AppShellProps) {
-  const [showLocalDataBanner, setShowLocalDataBanner] = React.useState(false);
 
   React.useEffect(() => {
     // Pull from cloud first, then start engine
     pullCloudToLocal(userId)
       .then(() => startBackgroundSync(userId))
       .catch(console.error);
-
-    // Check if user has local data that hasn't been synced yet
-    const hasPushed = localStorage.getItem(`hasPushed_${userId}`);
-    if (!hasPushed) {
-      import('../db').then(({ db }) => {
-        db.items.count().then(count => {
-          if (count > 0) setShowLocalDataBanner(true);
-        });
-      });
-    }
   }, [userId]);
 
-  const handlePushLocalData = async () => {
-    try {
-      await pushLocalToCloud(userId);
-      localStorage.setItem(`hasPushed_${userId}`, 'true');
-      setShowLocalDataBanner(false);
-    } catch (e) {
-      console.error('Failed to push local data:', e);
-    }
-  };
+
 
   const cycleTheme = () => {
     if (theme === 'system') setTheme('light');
@@ -114,28 +95,7 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
         <main style={{ flex: 1, padding: '2rem' }}>
           <OnboardingTour />
 
-          {/* Local Data Push Banner */}
-          {showLocalDataBanner && (
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem',
-              padding: '1rem 1.5rem', marginBottom: '1.5rem', borderRadius: '12px',
-              background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05))',
-              border: '1px solid var(--accent-primary)',
-            }}>
-              <div>
-                <p style={{ margin: 0, fontWeight: 'bold' }}>📦 You have local data!</p>
-                <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Push your existing inventory to your new account so it's safe and synced.</p>
-              </div>
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button className="btn btn-primary" onClick={handlePushLocalData} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
-                  Push to Cloud
-                </button>
-                <button className="btn" onClick={() => { setShowLocalDataBanner(false); localStorage.setItem(`hasPushed_${userId}`, 'true'); }} style={{ whiteSpace: 'nowrap' }}>
-                  Dismiss
-                </button>
-              </div>
-            </div>
-          )}
+
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/add" element={<AddItem />} />
