@@ -15,7 +15,7 @@ import { Compare } from '../pages/Compare';
 import { Insights } from '../pages/Insights';
 import { History } from '../pages/History';
 import { ShoppingList } from '../pages/ShoppingList';
-import { SyncSettings } from '../pages/SyncSettings';
+import { Settings as SettingsPage } from '../pages/Settings';
 import { OnboardingTour } from './OnboardingTour';
 import { startBackgroundSync } from '../lib/syncEngine';
 import { pullCloudToLocal, pushLocalToCloud } from '../lib/sync';
@@ -105,15 +105,16 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
           <Link to="/app/history" id="tour-history" className="btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Archive size={20} /> History
           </Link>
-          <Link to="/app/sync" className="btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Cloud size={20} /> Cloud Sync
+          <Link to="/app/settings" className="btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Settings size={20} /> Settings
           </Link>
 
           <div style={{ flex: 1 }} />
 
-          <button onClick={cycleTheme} className="btn neu-pressed" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
-            {getThemeIcon()} Theme: {theme.charAt(0).toUpperCase() + theme.slice(1)}
-          </button>
+          {/* User Profile / Settings */}
+          <Link to="/app/settings" className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer hover:bg-indigo-600 transition-colors">
+            {userId.substring(0, 2).toUpperCase()}
+          </Link>
         </nav>
         
         <main style={{ flex: 1, padding: '2rem' }}>
@@ -153,7 +154,7 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
             <Route path="/insights" element={<Insights />} />
             <Route path="/history" element={<History />} />
             <Route path="/shopping-list" element={<ShoppingList />} />
-            <Route path="/sync" element={<SyncSettings />} />
+            <Route path="/settings" element={<SettingsPage theme={theme} setTheme={setTheme} />} />
           </Routes>
         </main>
         
