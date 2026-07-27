@@ -46,7 +46,7 @@ export function OnboardingTour() {
       content: 'When you finish using an item, it moves here — keeping your active list clean.',
       placement: 'right' as const,
     },
-  ];
+  ].map(step => ({ ...step, disableBeacon: true, disableOverlayClose: true }));
 
   const handleCallback = (data: any) => {
     const { status, action } = data;
