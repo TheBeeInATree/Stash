@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase, configureSupabase, hasSupabaseConfig } from '../lib/supabase';
-import { Cloud, Fingerprint, LogIn, Save } from 'lucide-react';
+import { pushLocalToCloud, pullCloudToLocal } from '../lib/sync';
+import { Cloud, Fingerprint, LogIn, Save, UploadCloud, DownloadCloud } from 'lucide-react';
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
 
 export function SyncSettings() {
@@ -110,14 +111,50 @@ export function SyncSettings() {
           <h2>Signed In</h2>
           <p>You are signed in as: <strong>{user.email}</strong></p>
           <div style={{ padding: '1rem', background: 'var(--bg-color)', borderRadius: '8px', border: '1px solid var(--accent-success)', marginBottom: '1.5rem' }} className="neu-pressed">
-            <p style={{ margin: 0, color: 'var(--accent-success)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Cloud size={18} /> Cloud Sync is Active
+            <p style={{ margin: 0, color: 'var(--accent-success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold' }}>
+              <Cloud size={18} /> Automatic Background Sync Active
             </p>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-              Your local database will automatically sync with the cloud in the background (last-write-wins).
+            <p style={{ margin: '0.5rem 0 1rem 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+              Stash is offline-first. Your changes save locally instantly, and sync with the cloud automatically in the background. You can manually force a sync if needed.
             </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <button 
+                className="btn btn-primary" 
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                onClick={async () => {
+                  setLoading(true);
+                  try {
+                    await pushLocalToCloud(user.id);
+                    alert('Data successfully pushed to cloud!');
+                  } catch (e: any) {
+                    alert('Error pushing data: ' + e.message);
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              >
+                <UploadCloud size={20} /> Force Push Local Data
+              </button>
+              <button 
+                className="btn" 
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                onClick={async () => {
+                  setLoading(true);
+                  try {
+                    await pullCloudToLocal(user.id);
+                    alert('Data successfully pulled from cloud!');
+                  } catch (e: any) {
+                    alert('Error pulling data: ' + e.message);
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              >
+                <DownloadCloud size={20} /> Force Pull Cloud Data
+              </button>
+            </div>
           </div>
-          <button className="btn" onClick={handleLogout}>Sign Out</button>
+          <button className="btn" onClick={handleLogout} style={{ width: '100%' }}>Sign Out</button>
         </div>
       )}
     </div>

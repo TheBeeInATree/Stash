@@ -17,6 +17,9 @@ import { History } from '../pages/History';
 import { ShoppingList } from '../pages/ShoppingList';
 import { SyncSettings } from '../pages/SyncSettings';
 import { OnboardingTour } from './OnboardingTour';
+import { supabase } from '../lib/supabase';
+import { startBackgroundSync } from '../lib/syncEngine';
+import { pullCloudToLocal } from '../lib/sync';
 
 interface AppShellProps {
   theme: string;
@@ -26,6 +29,19 @@ interface AppShellProps {
 }
 
 export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts }: AppShellProps) {
+  React.useEffect(() => {
+    if (supabase) {
+      supabase.auth.getUser().then(({ data }) => {
+        if (data.user) {
+          // Initial pull to catch anything while offline, then start background engine
+          pullCloudToLocal(data.user.id)
+            .then(() => startBackgroundSync(data.user.id))
+            .catch(console.error);
+        }
+      });
+    }
+  }, []);
+
   const cycleTheme = () => {
     if (theme === 'system') setTheme('light');
     else if (theme === 'light') setTheme('dark');
