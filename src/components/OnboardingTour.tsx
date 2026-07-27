@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Joyride, STATUS } from 'react-joyride';
+import { Joyride } from 'react-joyride';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
 
@@ -49,8 +49,8 @@ export function OnboardingTour() {
   ];
 
   const handleCallback = (data: any) => {
-    const { status } = data;
-    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+    const { status, action } = data;
+    if (['finished', 'skipped'].includes(status) || action === 'close') {
       setRun(false);
       localStorage.setItem('hasCompletedOnboarding', 'true');
     }
