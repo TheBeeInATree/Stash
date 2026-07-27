@@ -1,9 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Package, Search, BarChart2, PieChart, Shield, CheckCircle, Smartphone } from 'lucide-react';
 
-export function Landing({ onStart }: { onStart: () => void }) {
+export function Landing() {
   const navigate = useNavigate();
+  const goToAuth = () => navigate('/auth');
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-color)', color: 'var(--text-primary)', display: 'flex', flexDirection: 'column' }}>
@@ -15,7 +16,7 @@ export function Landing({ onStart }: { onStart: () => void }) {
         </div>
         <div style={{ display: 'flex', gap: '1rem' }}>
           <button className="btn" onClick={() => navigate('/demo')}>See a Demo</button>
-          <button className="btn btn-primary" onClick={onStart}>Get Started</button>
+          <button className="btn btn-primary" onClick={goToAuth}>Get Started</button>
         </div>
       </header>
 
@@ -30,7 +31,7 @@ export function Landing({ onStart }: { onStart: () => void }) {
             Stash helps you track everything you own, know its real cost, and compare before you buy. Know what you have, before you buy it again.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <button className="btn btn-primary" onClick={onStart} style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>Sign Up Free</button>
+            <button className="btn btn-primary" onClick={goToAuth} style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>Sign Up Free</button>
             <button className="btn neu-convex" onClick={() => navigate('/demo')} style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>Take the Tour</button>
           </div>
         </section>
@@ -111,7 +112,7 @@ export function Landing({ onStart }: { onStart: () => void }) {
                 <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={20} color="var(--accent-success)" /> Barcode scanning</li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={20} color="var(--accent-success)" /> Local-first storage</li>
               </ul>
-              <button className="btn btn-primary" style={{ width: '100%', padding: '1rem' }} onClick={onStart}>Get Started Free</button>
+              <button className="btn btn-primary" style={{ width: '100%', padding: '1rem' }} onClick={goToAuth}>Get Started Free</button>
             </div>
           </div>
         </section>
@@ -139,7 +140,7 @@ export function Landing({ onStart }: { onStart: () => void }) {
       {/* Footer */}
       <footer style={{ padding: '4rem 2rem', background: 'var(--bg-color)', borderTop: '2px solid var(--shadow-light)', textAlign: 'center' }}>
         <h2 style={{ marginBottom: '1.5rem' }}>Ready to take control of your inventory?</h2>
-        <button className="btn btn-primary" onClick={onStart} style={{ padding: '1rem 2rem', fontSize: '1.1rem', marginBottom: '3rem' }}>Create Your Stash</button>
+        <button className="btn btn-primary" onClick={goToAuth} style={{ padding: '1rem 2rem', fontSize: '1.1rem', marginBottom: '3rem' }}>Create Your Stash</button>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>&copy; {new Date().getFullYear()} Stash. All rights reserved.</p>
       </footer>
     </div>

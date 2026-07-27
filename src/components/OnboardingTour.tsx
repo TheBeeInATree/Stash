@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
+import { useState, useEffect } from 'react';
+import { Joyride, STATUS } from 'react-joyride';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
 
@@ -8,54 +8,49 @@ export function OnboardingTour() {
   const items = useLiveQuery(() => db.items.toArray());
 
   useEffect(() => {
-    // Check if the user has already completed the tour
     const hasCompleted = localStorage.getItem('hasCompletedOnboarding') === 'true';
-    
-    // Only trigger if items have loaded, they have 0 items, and they haven't completed it
     if (items !== undefined && items.length === 0 && !hasCompleted) {
-      setRun(true);
+      // Small delay to let the DOM settle
+      setTimeout(() => setRun(true), 500);
     }
   }, [items]);
 
-  const steps: Step[] = [
+  const steps = [
     {
-      target: 'body', // Fallback starting point
-      placement: 'center',
-      content: <h2>Welcome to Stash! Let's take a quick tour to get you started organizing your life.</h2>,
-      disableBeacon: true,
+      target: 'body',
+      placement: 'center' as const,
+      content: 'Welcome to Stash! Let\'s take a quick tour to help you get started. You can skip at any time.',
     },
     {
-      target: window.innerWidth > 768 ? '#tour-add-item-desktop' : '#tour-add-item-mobile',
-      content: 'Start here! You can add items by typing, scanning a barcode, or snapping a picture of a receipt.',
-      placement: window.innerWidth > 768 ? 'right' : 'top',
+      target: '#tour-add-item-desktop',
+      content: 'Start here! Add items by typing naturally, scanning a barcode, or snapping a receipt photo.',
+      placement: 'right' as const,
     },
     {
       target: '#tour-search',
       content: 'Before you buy something new, search here to instantly check if you already own it.',
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: '#tour-compare',
-      content: 'Use Compare to pull up an item you own side-by-side with one you are considering buying to make smart decisions.',
-      placement: 'right',
+      content: 'Use Compare to put an item you own side-by-side with one you\'re considering buying.',
+      placement: 'right' as const,
     },
     {
       target: '#tour-insights',
-      content: 'Insights gives you a breakdown of your spending, alerts you to low stock, and shows expired items.',
-      placement: 'right',
+      content: 'Insights shows your spending breakdown, cost-per-use, low stock alerts, and expiring items.',
+      placement: 'right' as const,
     },
     {
       target: '#tour-history',
-      content: 'When you finish using an item, it moves here instead of cluttering up your active inventory.',
-      placement: 'right',
-    }
+      content: 'When you finish using an item, it moves here — keeping your active list clean.',
+      placement: 'right' as const,
+    },
   ];
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
+  const handleCallback = (data: any) => {
     const { status } = data;
-    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
-
-    if (finishedStatuses.includes(status)) {
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
       setRun(false);
       localStorage.setItem('hasCompletedOnboarding', 'true');
     }
@@ -63,9 +58,8 @@ export function OnboardingTour() {
 
   return (
     <Joyride
-      callback={handleJoyrideCallback}
+      callback={handleCallback}
       continuous
-      hideCloseButton
       run={run}
       scrollToFirstStep
       showProgress
@@ -79,20 +73,16 @@ export function OnboardingTour() {
           textColor: 'var(--text-primary)',
           arrowColor: 'var(--bg-color)',
         },
-        tooltipContainer: {
-          textAlign: 'left',
-        },
         buttonNext: {
           backgroundColor: 'var(--accent-primary)',
           borderRadius: '8px',
         },
         buttonBack: {
-          marginRight: 10,
-          color: 'var(--text-secondary)'
+          color: 'var(--text-secondary)',
         },
         buttonSkip: {
-          color: 'var(--text-secondary)'
-        }
+          color: 'var(--text-secondary)',
+        },
       }}
     />
   );

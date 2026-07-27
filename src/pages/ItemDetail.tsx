@@ -8,6 +8,7 @@ import { getFullLocationPath } from './Locations';
 import { getEstimatedYearlyCost, getUsageRateInfo } from '../lib/metrics';
 import { DateInput } from '../components/DateInput';
 import { v4 as uuidv4 } from 'uuid';
+import { useUndo } from '../contexts/UndoContext';
 
 export function ItemDetail() {
   const { id } = useParams<{ id: string }>();

@@ -38,6 +38,7 @@ export function startBackgroundSync(userId: string) {
   ALL_TABLES.forEach((table) => {
     const supabaseTable = table === 'savedSearches' ? 'saved_searches' : table;
     
+    if (!supabase) return;
     supabase.channel(`public:${supabaseTable}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: supabaseTable, filter: `user_id=eq.${userId}` }, (payload) => {
         console.log(`☁️ Cloud change received for ${table}:`, payload.eventType);

@@ -1,59 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { supabase, configureSupabase, hasSupabaseConfig } from '../lib/supabase';
+import { supabase, hasSupabaseConfig } from '../lib/supabase';
 import { pushLocalToCloud, pullCloudToLocal } from '../lib/sync';
-import { Cloud, Fingerprint, LogIn, Save, UploadCloud, DownloadCloud } from 'lucide-react';
-import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
+import { Cloud, UploadCloud, DownloadCloud, LogOut } from 'lucide-react';
 
 export function SyncSettings() {
-  const [url, setUrl] = useState(localStorage.getItem('supabase_url') || '');
-  const [key, setKey] = useState(localStorage.getItem('supabase_key') || '');
-  const [email, setEmail] = useState('');
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [syncMsg, setSyncMsg] = useState('');
 
   useEffect(() => {
-    if (supabase) {
-      supabase.auth.getUser().then(({ data }) => {
-        setUser(data.user);
-        setLoading(false);
-      });
-      const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
-        setUser(session?.user || null);
-      });
-      return () => {
-        authListener.subscription.unsubscribe();
-      };
-    } else {
+    supabase?.auth.getUser().then(({ data }) => {
+      setUser(data.user);
       setLoading(false);
-    }
-  }, [url, key]);
-
-  const handleSaveConfig = () => {
-    configureSupabase(url, key);
-    window.location.reload(); // Reload to initialize client properly everywhere
-  };
-
-  const handleMagicLink = async () => {
-    if (!supabase) return;
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    if (error) alert(error.message);
-    else alert('Check your email for the login link!');
-  };
-
-  const handleBiometricRegister = async () => {
-    // In a real app, this requires a backend to generate registration options.
-    // For MVP, we alert that it's mocked, or we rely on Supabase's native passkey support if available.
-    alert('Biometric registration requires backend challenge generation. Supabase Passkeys feature could be used here when configured on the project.');
-  };
-
-  const handleBiometricLogin = async () => {
-    // Mocked for MVP unless backend is fully set up.
-    alert('Biometric login would initiate here using startAuthentication() from @simplewebauthn/browser.');
-  };
+    });
+    const { data: listener } = supabase?.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null);
+    }) ?? { data: null };
+    return () => listener?.subscription.unsubscribe();
+  }, []);
 
   const handleLogout = async () => {
-    if (supabase) await supabase.auth.signOut();
+    await supabase?.auth.signOut();
   };
+
+  const handlePush = async () => {
+    if (!user) return;
+    setSyncMsg('Pushing...');
+    try {
+      await pushLocalToCloud(user.id);
+      setSyncMsg('✅ All local data pushed to cloud!');
+    } catch (e: any) {
+      setSyncMsg('❌ Error: ' + e.message);
+    }
+  };
+
+  const handlePull = async () => {
+    if (!user) return;
+    setSyncMsg('Pulling...');
+    try {
+      await pullCloudToLocal(user.id);
+      setSyncMsg('✅ Cloud data pulled to this device!');
+    } catch (e: any) {
+      setSyncMsg('❌ Error: ' + e.message);
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', paddingTop: '2rem' }}>
@@ -61,100 +53,45 @@ export function SyncSettings() {
         <Cloud size={28} /> Cloud Sync
       </h1>
       <p style={{ color: 'var(--text-secondary)' }}>
-        Sync your inventory across devices and share with your household. Your data is always available locally offline.
+        Your data lives on your device and syncs automatically with your account in the background.
       </p>
 
-      {!hasSupabaseConfig() ? (
-        <div className="card neu-flat" style={{ marginTop: '2rem' }}>
-          <h2>Configure Supabase</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-            To enable sync, you need a Supabase project. Enter your project URL and Anon Key.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-            <input className="input neu-pressed" placeholder="Supabase URL (https://...)" value={url} onChange={e => setUrl(e.target.value)} />
-            <input className="input neu-pressed" placeholder="Supabase Anon Key" type="password" value={key} onChange={e => setKey(e.target.value)} />
-            <button className="btn btn-primary" onClick={handleSaveConfig} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <Save size={18} /> Save Configuration
-            </button>
-          </div>
-        </div>
-      ) : loading ? (
-        <p>Loading...</p>
-      ) : !user ? (
-        <div className="card neu-flat" style={{ marginTop: '2rem' }}>
-          <h2>Sign In to Sync</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <input className="input neu-pressed" style={{ flex: 1 }} placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} />
-              <button className="btn" onClick={handleMagicLink} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <LogIn size={18} /> Magic Link
-              </button>
-            </div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-              <div style={{ flex: 1, height: '1px', background: 'var(--shadow-light)' }} />
-              <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>OR</span>
-              <div style={{ flex: 1, height: '1px', background: 'var(--shadow-light)' }} />
-            </div>
+      {user ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '2rem' }}>
 
-            <button className="btn btn-primary" onClick={handleBiometricLogin} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <Fingerprint size={20} /> Sign in with Biometrics / Passkey
-            </button>
-            
-            <button className="btn" onClick={handleBiometricRegister} style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', background: 'transparent', boxShadow: 'none' }}>
-              Register new biometric device
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="card neu-flat" style={{ marginTop: '2rem' }}>
-          <h2>Signed In</h2>
-          <p>You are signed in as: <strong>{user.email}</strong></p>
-          <div style={{ padding: '1rem', background: 'var(--bg-color)', borderRadius: '8px', border: '1px solid var(--accent-success)', marginBottom: '1.5rem' }} className="neu-pressed">
-            <p style={{ margin: 0, color: 'var(--accent-success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold' }}>
+          {/* Status */}
+          <div className="card neu-flat" style={{ border: '1px solid var(--accent-success)', padding: '1.5rem' }}>
+            <p style={{ margin: '0 0 0.25rem 0', color: 'var(--accent-success)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Cloud size={18} /> Automatic Background Sync Active
             </p>
-            <p style={{ margin: '0.5rem 0 1rem 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-              Stash is offline-first. Your changes save locally instantly, and sync with the cloud automatically in the background. You can manually force a sync if needed.
+            <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+              Signed in as <strong>{user.email}</strong>. Changes sync instantly across all your devices.
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <button 
-                className="btn btn-primary" 
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-                onClick={async () => {
-                  setLoading(true);
-                  try {
-                    await pushLocalToCloud(user.id);
-                    alert('Data successfully pushed to cloud!');
-                  } catch (e: any) {
-                    alert('Error pushing data: ' + e.message);
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-              >
-                <UploadCloud size={20} /> Force Push Local Data
-              </button>
-              <button 
-                className="btn" 
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-                onClick={async () => {
-                  setLoading(true);
-                  try {
-                    await pullCloudToLocal(user.id);
-                    alert('Data successfully pulled from cloud!');
-                  } catch (e: any) {
-                    alert('Error pulling data: ' + e.message);
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-              >
-                <DownloadCloud size={20} /> Force Pull Cloud Data
-              </button>
-            </div>
           </div>
-          <button className="btn" onClick={handleLogout} style={{ width: '100%' }}>Sign Out</button>
+
+          {/* Manual Sync */}
+          <div className="card neu-flat" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <h3 style={{ margin: 0 }}>Manual Sync</h3>
+            <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+              Use these as emergency overrides if you believe your data is out of sync.
+            </p>
+            <button className="btn btn-primary" onClick={handlePush} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              <UploadCloud size={20} /> Force Push Local Data
+            </button>
+            <button className="btn" onClick={handlePull} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              <DownloadCloud size={20} /> Force Pull Cloud Data
+            </button>
+            {syncMsg && <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center' }}>{syncMsg}</p>}
+          </div>
+
+          {/* Sign Out */}
+          <button className="btn" onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--accent-danger)' }}>
+            <LogOut size={18} /> Sign Out
+          </button>
+        </div>
+      ) : (
+        <div className="card neu-flat" style={{ marginTop: '2rem', padding: '2rem', textAlign: 'center' }}>
+          <p style={{ color: 'var(--text-secondary)' }}>You are not signed in. Sign in to enable cloud sync.</p>
         </div>
       )}
     </div>
