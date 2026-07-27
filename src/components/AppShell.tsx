@@ -109,26 +109,6 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
             <Settings size={20} /> Settings
           </Link>
 
-          <div style={{ flex: 1 }} />
-
-          {/* User Profile / Settings */}
-          <Link to="/app/settings" style={{
-            width: '40px',
-            minHeight: '40px',
-            borderRadius: '50%',
-            background: 'var(--accent-primary)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: 'bold',
-            textDecoration: 'none',
-            alignSelf: 'center',
-            boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
-            marginTop: '1rem'
-          }}>
-            {userId.substring(0, 2).toUpperCase()}
-          </Link>
         </nav>
         
         <main style={{ flex: 1, padding: '2rem' }}>
