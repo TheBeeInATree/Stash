@@ -1,7 +1,7 @@
 import { db } from '../db';
 import { supabase } from './supabase';
 
-export const ALL_TABLES = ['categories', 'items', 'groups', 'formulas', 'locations', 'savedSearches', 'sets'] as const;
+export const ALL_TABLES = ['categories', 'locations', 'groups', 'formulas', 'items', 'savedSearches', 'sets'] as const;
 
 export function mapLocalToCloud(table: string, record: any, userId: string) {
   const dbRecord = { ...record, user_id: userId };
@@ -105,7 +105,10 @@ export async function pushLocalToCloud(userId: string) {
     const supabaseTable = table === 'savedSearches' ? 'saved_searches' : table;
     
     const { error } = await supabase.from(supabaseTable).upsert(cloudRecords);
-    if (error) console.error(`Failed to push ${table}:`, error);
+    if (error) {
+      console.error(`Failed to push ${table}:`, error);
+      throw new Error(`Failed to push ${table}: ${error.message}`);
+    }
   }
 }
 
