@@ -10,8 +10,12 @@ export function OnboardingTour() {
   useEffect(() => {
     const hasCompleted = localStorage.getItem('hasCompletedOnboarding') === 'true';
     if (items !== undefined && items.length === 0 && !hasCompleted) {
-      // Small delay to let the DOM settle
-      setTimeout(() => setRun(true), 500);
+      // Wait 2 seconds to ensure any cloud pulls have finished
+      setTimeout(() => {
+        if (items && items.length === 0 && localStorage.getItem('hasCompletedOnboarding') !== 'true') {
+          setRun(true);
+        }
+      }, 2000);
     }
   }, [items]);
 
@@ -19,7 +23,30 @@ export function OnboardingTour() {
     {
       target: 'body',
       placement: 'center' as const,
-      content: 'Welcome to Stash! Let\'s take a quick tour to help you get started. You can skip at any time.',
+      content: (
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Welcome to Stash!</h2>
+          <p style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>Let's take a quick tour to help you get started.</p>
+          <button 
+            onClick={() => {
+              setRun(false);
+              localStorage.setItem('hasCompletedOnboarding', 'true');
+            }}
+            style={{
+              background: '#ef4444',
+              color: 'white',
+              border: 'none',
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              width: '100%'
+            }}
+          >
+            Skip Tour Forever
+          </button>
+        </div>
+      ),
     },
     {
       target: '#tour-add-item-desktop',
