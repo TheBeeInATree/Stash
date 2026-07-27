@@ -1,0 +1,1 @@
+export const DEFAULT_LOW_STOCK_PERCENTAGE = 0.20;
