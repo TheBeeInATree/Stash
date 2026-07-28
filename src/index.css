@@ -172,6 +172,9 @@ h1, h2, h3, h4, h5, h6 {
 .mobile-fab { display: none; }
 
 @media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
   .desktop-only { display: none !important; }
   .mobile-only { display: flex !important; }
   .desktop-sidebar { display: none !important; }

@@ -94,16 +94,16 @@ Status: ${item.status}`;
               onChange={(e) => onSelect(item.id, e.target.checked, (e.nativeEvent as PointerEvent).shiftKey)}
               style={{ marginTop: '0.25rem' }}
             />
-            <h3 style={{ margin: 0, cursor: 'pointer' }} onClick={() => navigate(`/item/${item.id}`)}>{item.name}</h3>
+            <h3 style={{ margin: 0, cursor: 'pointer', fontSize: '1.1rem' }} onClick={() => navigate(`/item/${item.id}`)}>{item.name}</h3>
           </div>
-          <span style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', borderRadius: '8px', background: 'var(--accent-primary)', color: '#fff' }}>
+          <span style={{ fontSize: '0.7rem', padding: '0.2rem 0.4rem', borderRadius: '6px', background: 'var(--accent-primary)', color: '#fff' }}>
             {item.status.replace('_', ' ')}
           </span>
         </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1.75rem', cursor: 'pointer' }} onClick={() => navigate(`/item/${item.id}`)}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.25rem', margin: '0.25rem 0 0 1.75rem', cursor: 'pointer' }} onClick={() => navigate(`/item/${item.id}`)}>
           {category?.icon} {category?.name}
         </p>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '1rem', marginLeft: '1.75rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '0.75rem', marginLeft: '1.75rem' }}>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             {editingField === 'price' ? (
               <input 
