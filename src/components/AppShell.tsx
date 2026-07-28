@@ -113,9 +113,11 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
         </main>
         
         {/* Mobile Nav */}
+        <Link to="/app/add" id="tour-add-item-mobile" className="mobile-fab">
+          <PlusCircle size={24} />
+        </Link>
         <div className="mobile-bottom-bar">
           <Link to="/app" className="tab-item"><Home size={24} /><span>Home</span></Link>
-          <Link to="/app/add" className="tab-item"><PlusCircle size={24} /><span>Add Item</span></Link>
           <Link to="/app/shopping-list" className="tab-item"><ShoppingCart size={24} /><span>List</span></Link>
           <Link to="/app/compare" className="tab-item"><BarChart2 size={24} /><span>Compare</span></Link>
           <Link to="/app/insights" className="tab-item"><PieChart size={24} /><span>Insights</span></Link>
