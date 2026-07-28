@@ -430,14 +430,16 @@ export function Dashboard() {
           Refreshing...
         </div>
       )}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <h1>Dashboard</h1>
-          <button className="btn neu-pressed" onClick={handleExport} style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
-            <Download size={16} /> Export All JSON
-          </button>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <h1 style={{ margin: 0 }}>Dashboard</h1>
+            <button className="btn neu-pressed desktop-only" onClick={handleExport} style={{ padding: '0.5rem', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
+              <Download size={16} /> Export All JSON
+            </button>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', position: 'relative' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', overflowX: 'auto', paddingBottom: '0.5rem' }}>
           
           <div id="tour-search" style={{ position: 'relative', flex: 1, minWidth: '200px', display: 'flex', alignItems: 'center' }}>
             <Search size={20} color="var(--text-secondary)" style={{ position: 'absolute', left: '0.75rem', zIndex: 1 }} />
@@ -525,7 +527,7 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
         <div className="card neu-flat" style={{ borderTop: '4px solid var(--accent-primary)', cursor: 'pointer' }} onClick={() => navigate('/insights')}>
           <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem' }}>
             <DollarSign size={16} /> Budget Preview
