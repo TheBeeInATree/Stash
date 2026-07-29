@@ -104,7 +104,7 @@ export function DemoWalkthrough() {
                 ))}
               </div>
 
-              <Tooltip title="Your stash Dashboard" desc="All your items in one place. See status, cost-per-use, and quick-edit prices directly on each card — no need to open an item to update it." onNext={nextStep} />
+              <Tooltip title="Your Stash Dashboard" desc="All your items in one place. See status, cost-per-use, and quick-edit prices directly on each card — no need to open an item to update it." onNext={nextStep} />
             </div>
           )}
 
@@ -168,7 +168,7 @@ export function DemoWalkthrough() {
               <h1>Insights</h1>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
                 {[
-                  { label: 'Total stash Value', value: '$562', color: 'var(--accent-primary)' },
+                  { label: 'Total Stash Value', value: '$562', color: 'var(--accent-primary)' },
                   { label: 'Active Items', value: '3', color: 'var(--accent-success)' },
                   { label: 'Avg Cost / Use', value: '$2.14', color: 'var(--accent-warning)' },
                   { label: 'Low Stock Alerts', value: '2', color: 'var(--accent-danger)' },

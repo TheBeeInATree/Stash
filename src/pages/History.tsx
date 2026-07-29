@@ -281,7 +281,7 @@ export function History() {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '3rem' }}>
-        <h2 style={{ margin: 0 }}>Your stash</h2>
+        <h2 style={{ margin: 0 }}>Your Stash</h2>
         {filteredItems.length > 0 && (
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
             <input 

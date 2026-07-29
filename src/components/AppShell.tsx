@@ -56,7 +56,7 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
       <div style={{ display: 'flex', minHeight: '100vh' }}>
         <nav className="desktop-sidebar neu-flat" style={{ width: '250px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', borderRight: '2px solid var(--shadow-light)' }}>
           <h2 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-primary)' }}>
-            <Package /> stash
+            <Package /> Stash
           </h2>
           
           <Link to="/app/add" id="tour-add-item-desktop" className="btn btn-primary" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
