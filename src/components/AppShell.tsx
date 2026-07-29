@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import { Package, PlusCircle, Home, ShoppingCart, BarChart2, PieChart, Settings, MapPin, Layers, Archive, Cloud, Sun, Moon, Monitor, MoreHorizontal } from 'lucide-react';
+import { Package, PlusCircle, Home, ShoppingCart, BarChart2, PieChart, Settings, MapPin, Layers, Archive, Sun, Moon, Monitor, MoreHorizontal, Search } from 'lucide-react';
 import { UndoProvider } from '../contexts/UndoContext';
 import { ShortcutsModal } from './ShortcutsModal';
 
@@ -17,6 +17,7 @@ import { History } from '../pages/History';
 import { ShoppingList } from '../pages/ShoppingList';
 import { Settings as SettingsPage } from '../pages/Settings';
 import { OnboardingTour } from './OnboardingTour';
+import { Browse } from '../pages/Browse';
 import { startBackgroundSync } from '../lib/syncEngine';
 import { pullCloudToLocal, pushLocalToCloud } from '../lib/sync';
 
@@ -65,6 +66,9 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
           <Link to="/app" className="btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Home size={20} /> Dashboard
           </Link>
+          <Link to="/app/browse" className="btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Search size={20} /> Browse
+          </Link>
           <Link to="/app/shopping-list" className="btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <ShoppingCart size={20} /> Shopping List
           </Link>
@@ -98,6 +102,7 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
 
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/browse" element={<Browse />} />
             <Route path="/add" element={<AddItem />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/locations" element={<Locations />} />
@@ -118,6 +123,7 @@ export function AppShell({ theme, setTheme, showShortcuts, setShowShortcuts, use
         </Link>
         <div className="mobile-bottom-bar">
           <Link to="/app" className="tab-item"><Home size={24} /><span>Home</span></Link>
+          <Link to="/app/browse" className="tab-item"><Search size={24} /><span>Browse</span></Link>
           <Link to="/app/shopping-list" className="tab-item"><ShoppingCart size={24} /><span>List</span></Link>
           <Link to="/app/compare" className="tab-item"><BarChart2 size={24} /><span>Compare</span></Link>
           <Link to="/app/insights" className="tab-item"><PieChart size={24} /><span>Insights</span></Link>
