@@ -108,8 +108,8 @@ export function Dashboard() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '1rem' }}>
         {statCard(<Package size={16} />, 'Total Items', totalItems, 'var(--accent-primary)', () => navigate('/app/browse'))}
         {statCard(<DollarSign size={16} />, 'Total Value', `$${totalValue.toFixed(2)}`, 'var(--accent-success)', () => navigate('/app/insights'))}
-        {statCard(<AlertTriangle size={16} />, 'Low Stock', lowStockAlerts.length, lowStockAlerts.length > 0 ? 'var(--accent-warning)' : 'var(--text-secondary)'))}
-        {statCard(<Clock size={16} />, 'Expiring Soon', expiringAlerts.length, expiringAlerts.length > 0 ? 'var(--accent-danger)' : 'var(--text-secondary)'))}
+        {statCard(<AlertTriangle size={16} />, 'Low Stock', lowStockAlerts.length, lowStockAlerts.length > 0 ? 'var(--accent-warning)' : 'var(--text-secondary)')}
+        {statCard(<Clock size={16} />, 'Expiring Soon', expiringAlerts.length, expiringAlerts.length > 0 ? 'var(--accent-danger)' : 'var(--text-secondary)')}
       </div>
 
       {/* Budget Previews */}
