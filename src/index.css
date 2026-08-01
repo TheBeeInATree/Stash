@@ -192,6 +192,7 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 50;
     justify-content: flex-start;
     padding: 0.5rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
     border-top: 1px solid var(--shadow-light);
     overflow-x: auto;
     scroll-behavior: smooth;
@@ -213,7 +214,7 @@ h1, h2, h3, h4, h5, h6 {
   .mobile-fab {
     display: flex;
     position: fixed;
-    bottom: 80px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
     right: 20px;
     width: 56px; height: 56px;
     border-radius: 28px;
@@ -225,5 +226,5 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: none;
   }
   
-  main { padding: 1rem !important; padding-bottom: 80px !important; }
+  main { padding: 1rem !important; padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
 }
