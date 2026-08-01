@@ -10,7 +10,7 @@ export function Landing() {
     <div style={{ minHeight: '100vh', background: 'var(--bg-color)', color: 'var(--text-primary)', display: 'flex', flexDirection: 'column' }}>
       
       {/* Navbar */}
-      <header className="neu-flat" style={{ padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
+      <header className="neu-flat" style={{ padding: '1.5rem 2rem', paddingTop: 'calc(1.5rem + env(safe-area-inset-top))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-primary)', fontWeight: 'bold', fontSize: '1.5rem' }}>
           <Package size={28} /> Stash
         </div>

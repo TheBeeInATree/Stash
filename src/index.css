@@ -226,5 +226,5 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: none;
   }
   
-  main { padding: 1rem !important; padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
+  main { padding: 1rem !important; padding-top: calc(1rem + env(safe-area-inset-top)) !important; padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
 }
